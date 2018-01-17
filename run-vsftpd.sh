@@ -49,4 +49,4 @@ else
 fi
 
 # Run vsftpd:
-&>/dev/null /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf
+/usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf
