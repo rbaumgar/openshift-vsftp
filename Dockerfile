@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/rhel7/rhel
+FROM registry.access.redhat.com/rhel7
 MAINTAINER Robert Baumgartner <rbaumgar@redhat.com>
 LABEL Description="RHEL 7 based vsftpd server. Supports passive mode and virtual users."
 
