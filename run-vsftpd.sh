@@ -52,7 +52,8 @@ echo	· Redirect vsftpd log to STDOUT: No.
 #fi
 
 # Run vsftpd:
-echo vsftp with /etc/vsftp/vsftpd.conf
+echo run vsftp with /etc/vsftp/vsftpd.conf
 echo 
-cat /etc/vsftp/vsftp.conf
+cat /etc/vsftpd/vsftpd.conf
+echo
 /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf
