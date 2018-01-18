@@ -1,6 +1,6 @@
 #!/bin/bash
 
-exec 1> >(logger -s -t $(basename $0)) 2>&1
+# exec 1> >(logger -s -t $(basename $0)) 2>&1
 
 # If no env var for FTP_USER has been specified, use 'admin':
 if [ "$FTP_USER" = "**String**" ]; then
@@ -36,20 +36,23 @@ echo "pasv_min_port=${PASV_MIN_PORT}" >> /etc/vsftpd/vsftpd.conf
 export LOG_FILE=`grep xferlog_file /etc/vsftpd/vsftpd.conf|cut -d= -f2`
 
 # stdout server info:
-if [ ! $LOG_STDOUT ]; then
-cat << EOB
+# if [ ! $LOG_STDOUT ]; then
+# cat << EOB
 
-	SERVER SETTINGS
-	---------------
-	· FTP User: $FTP_USER
-	· FTP Password: $FTP_PASS
-	· Log file: $LOG_FILE
-	· Redirect vsftpd log to STDOUT: No.
-EOB
-else
+echo	SERVER SETTINGS
+echo	---------------
+echo	· FTP User: $FTP_USER
+echo	· FTP Password: $FTP_PASS
+echo	· Log file: $LOG_FILE
+echo	· Redirect vsftpd log to STDOUT: No.
+# EOB
+#else
     # /usr/bin/ln -sf /dev/stdout $LOG_FILE
     echo "Test"
-fi
+#fi
 
 # Run vsftpd:
+echo vsftp with /etc/vsftp/vsftpd.conf
+echo 
+cat /etc/vsftp/vsftp.conf
 /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf
