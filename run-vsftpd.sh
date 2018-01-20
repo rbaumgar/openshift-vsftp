@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# exec 1> >(logger -s -t $(basename $0)) 2>&1
+exec 1> >(logger -s -t $(basename $0)) 2>&1
 
 # If no env var for FTP_USER has been specified, use 'admin':
 if [ "$FTP_USER" = "**String**" ]; then
@@ -23,6 +23,9 @@ fi
 mkdir -p "/home/vsftpd/${FTP_USER}"
 echo -e "${FTP_USER}\n${FTP_PASS}" > /etc/vsftpd/virtual_users.txt
 /usr/bin/db_load -T -t hash -f /etc/vsftpd/virtual_users.txt /etc/vsftpd/virtual_users.db
+
+# Create a banner file
+echo "vsftpd `vsftpd -v` running on `uname -n`" >/home/vsftpd/banner
 
 # Set passive mode parameters:
 if [ "$PASV_ADDRESS" = "**IPv4**" ]; then
