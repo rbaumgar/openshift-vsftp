@@ -21,6 +21,9 @@ fi
 
 # Create home dir and update vsftpd user db:
 mkdir -p "/home/vsftpd/${FTP_USER}"
+chmod 770 -R /home/vsftpd
+chown -R ftp. /home/vsftpd
+usermod -G ftp $FTP_USER
 echo -e "${FTP_USER}\n${FTP_PASS}" > /etc/vsftpd/virtual_users.txt
 /usr/bin/db_load -T -t hash -f /etc/vsftpd/virtual_users.txt /etc/vsftpd/virtual_users.db
 
