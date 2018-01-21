@@ -21,8 +21,8 @@ COPY vsftpd_virtual /etc/pam.d/
 COPY run-vsftpd.sh /usr/sbin/
 
 RUN chmod +x /usr/sbin/run-vsftpd.sh && \
-    mkdir -p /home/vsftpd/ && \
-    chown -R ftp:ftp /home/vsftpd/
+    mkdir -p /home/vsftpd/ 
+#   chown -R ftp:ftp /home/vsftpd/
 
 VOLUME /home/vsftpd
 VOLUME /var/log/vsftpd
