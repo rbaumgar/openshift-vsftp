@@ -5,8 +5,7 @@ LABEL Description="RHEL 7 based vsftpd server. Supports passive mode and virtual
 #RUN yum -y update && \
 #    yum clean all && \
 #    yum -y install httpd && \
-RUN yum clean all && \
-    yum --disablerepo=rhel-7-server-htb-rpms && \
+RUN yum clean all --disablerepo=rhel-7-server-htb-rpms && \
     yum install -y  vsftpd db4-utils db4
 
 ENV FTP_USER **String** \
