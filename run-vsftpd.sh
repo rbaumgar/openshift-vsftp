@@ -1,6 +1,6 @@
 #!/bin/bash
 
-exec 1> >(logger -s -t $(basename $0)) 2>&1
+# exec 1> >(logger -s -t $(basename $0)) 2>&1
 
 # If no env var for FTP_USER has been specified, use 'admin':
 if [ "$FTP_USER" = "**String**" ]; then
@@ -50,8 +50,13 @@ echo	· Redirect vsftpd log to STDOUT: No.
 echo 
 
 # Run vsftpd:
-echo run vsftp with /etc/vsftp/vsftpd.conf
-echo 
+echo vsftpd.conf
+echo ===========
 cat /etc/vsftpd/vsftpd.conf
 echo
+echo run vsftp with /etc/vsftp/vsftpd.conf
+date
+
 /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf 2>&1
+
+date
