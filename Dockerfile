@@ -22,8 +22,8 @@ RUN chmod +x /usr/sbin/run-vsftpd.sh && \
     mkdir -p /home/vsftpd/ && \
     chown -R ftp:ftp /home/vsftpd/
 
-VOLUME /home/vsftpd
-VOLUME /var/log/vsftpd
+#VOLUME /home/vsftpd
+#VOLUME /var/log/vsftpd
 
 EXPOSE 20 21
 
