@@ -27,4 +27,6 @@ VOLUME /var/log/vsftpd
 
 EXPOSE 20 21
 
+USER 0
+
 CMD ["/usr/sbin/run-vsftpd.sh"]
