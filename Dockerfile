@@ -1,5 +1,7 @@
 FROM registry.access.redhat.com/rhel7
+
 MAINTAINER Robert Baumgartner <rbaumgar@redhat.com>
+
 LABEL Description="RHEL 7 based vsftpd server. Supports passive mode and virtual users."
 
 #RUN yum -y update && \
@@ -22,11 +24,9 @@ RUN chmod +x /usr/sbin/run-vsftpd.sh && \
     mkdir -p /home/vsftpd/ && \
     chown -R ftp:ftp /home/vsftpd/
 
-#VOLUME /home/vsftpd
-#VOLUME /var/log/vsftpd
+VOLUME /home/vsftpd
+VOLUME /var/log/vsftpd
 
 EXPOSE 20 21
-
-USER 0
 
 CMD ["/usr/sbin/run-vsftpd.sh"]
