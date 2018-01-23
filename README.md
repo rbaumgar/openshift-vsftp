@@ -1,24 +1,13 @@
-# fauria/vsftpd
+# openshift-vsftp
 
-![docker_logo](https://raw.githubusercontent.com/fauria/docker-vsftpd/master/docker_139x115.png)![docker_fauria_logo](https://raw.githubusercontent.com/fauria/docker-vsftpd/master/docker_fauria_161x115.png)
+This Docker image implements a vsftpd server, with the following features:
 
-[![](https://images.microbadger.com/badges/image/fauria/vsftpd.svg)](https://microbadger.com/images/fauria/vsftpd "Get your own image badge on microbadger.com")
-
-This Docker container implements a vsftpd server, with the following features:
-
- * Centos 7 base image.
- * vsftpd 3.0
+ * Red Hat RHEL 7 base image
+ * vsftpd 3.0.2
  * Virtual users
  * Passive mode
  * Logging to a file or STDOUT.
 
-### Installation from [Docker registry hub](https://registry.hub.docker.com/u/fauria/vsftpd/).
-
-You can download the image with the following command:
-
-```bash
-docker pull fauria/vsftpd
-```
 
 Environment variables
 ----
@@ -72,41 +61,75 @@ Exposed ports and volumes
 
 The image exposes ports `20` and `21`. Also, exports two volumes: `/home/vsftpd`, which contains users home directories, and `/var/log/vsftpd`, used to store logs.
 
-When sharing a homes directory between the host and the container (`/home/vsftpd`) the owner user id and group id should be 14 and 80 respectively. This correspond ftp user and ftp group on the container, but may match something else on the host.
-
 Use cases
 ----
 
-1) Create a temporary container for testing purposes:
+0) Build image
+```bash
+ oc new-build https://github.com/rbaumgar/openshift-vsftp
+``` 
+
+1) Run image temporary testing purposes:
 
 ```bash
-  docker run --rm fauria/vsftp
+  docker run --rm openshift-vsftp
 ```
 
 2) Create a container in active mode using the default user account, with a binded data directory:
 
 ```bash
-docker run -d -p 21:21 -v /my/data/directory:/home/vsftpd --name vsftpd fauria/vsftpd
-# see logs for credentials:
+docker run -d -p 21:21 -v /my/data/directory:/home/vsftpd \
+-e FTP_USER=user -e FTP_PASS=pass1234 \
+-e PASV_ADDRESS=127.0.0.1 -e PASV_MIN_PORT=21100 -e PASV_MAX_PORT=21110 \
+--name vsftpd openshift-vsftp
 docker logs vsftpd
 ```
+3) create external IP adress, if not already done
+External IPs assigned to services of type LoadBalancer will always be in the range of ingressIPNetworkCIDR. If ingressIPNetworkCIDR is changed such that the assigned external IPs are no longer in range, the affected services will be assigned new external IPs compatible with the new range.
 
-3) Create a **production container** with a custom user account, binding a data directory and enabling both active and passive mode:
+Sample /etc/origin/master/master-config.yaml
 
-```bash
-docker run -d -v /my/data/directory:/home/vsftpd \
--p 20:20 -p 21:21 -p 21100-21110:21100-21110 \
--e FTP_USER=myuser -e FTP_PASS=mypass \
--e PASV_ADDRESS=127.0.0.1 -e PASV_MIN_PORT=21100 -e PASV_MAX_PORT=21110 \
---name vsftpd --restart=always fauria/lap
+``` 
+   networkConfig:
+     ingressIPNetworkCIDR: 172.29.0.0/16
+``` 
+You need to restart the master if you change the configuration with: systemctl restart atomic.openshift.master
+
+Configuring an Ingress IP for a Service
+----
+``` 
+cat <<EOF | oc create -f
+apiVersion: v1
+kind: Service
+metadata:
+  name: vsftp
+spec:
+  loadBalancerIP: 172.29.0.1
+  ports:
+  - name: 20-tcp
+    port: 20
+    protocol: TCP
+    targetPort: 20
+  - name: 21-tcp
+    port: 21
+    protocol: TCP
+    targetPort: 21
+  selector:
+    deploymentconfig: openshift-vsftp
+  type: LoadBalancer
+EOF
+
+oc get svc vsftp
+NAME              CLUSTER-IP     EXTERNAL-IP             PORT(S)                     AGE
+vsftp             172.30.107.7   172.29.0.1,172.29.0.1   20:30167/TCP,21:30525/TCP   4d
 ```
 
-4) Manually add a new FTP user to an existing container:
-```bash
-docker exec -i -t vsftpd bash
-mkdir /home/vsftpd/myuser
-echo -e "myuser\nmypass" >> /etc/vsftpd/virtual_users.txt
-/usr/bin/db_load -T -t hash -f /etc/vsftpd/virtual_users.txt /etc/vsftpd/virtual_users.db
-exit
-docker restart vsftpd
-```
+Routing the Ingress CIDR for Development or Testing
+----
+Add a static route directing traffic for the ingress CIDR to a node in the cluster. For example:
+
+   # route add -net 172.29.0.0/16 gw 10.66.140.17 eth0
+
+In the example above, 172.29.0.0/16 is the ingressIPNetworkCIDR, and 10.66.140.17 is the node IP.
+
+
