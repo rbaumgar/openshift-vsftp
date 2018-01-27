@@ -29,6 +29,7 @@ VOLUME /var/log/vsftpd
 
 EXPOSE 2020 2021
 
-USER 14 # ftp
+#USER ftp
+USER 14 
 
 CMD ["/usr/sbin/run-vsftpd.sh"]
