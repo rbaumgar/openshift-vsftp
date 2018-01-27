@@ -4,10 +4,8 @@ MAINTAINER Robert Baumgartner <rbaumgar@redhat.com>
 
 LABEL Description="RHEL 7 based vsftpd server. Supports passive mode and virtual users."
 
-#RUN yum -y update && \
-#    yum clean all && \
-#    yum -y install httpd && \
-RUN yum -y install --disablerepo "*" --enablerepo rhel-7-server-rpms \
+#RUN yum -y install --disablerepo "*" --enablerepo rhel-7-server-rpms \
+RUN -y install \
       vsftpd db4-utils db4 && \
       yum clean all
 
