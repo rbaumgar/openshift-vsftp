@@ -24,8 +24,8 @@ mkdir -p "/home/vsftpd/${FTP_USER}"
 chmod 770 -R /home/vsftpd
 chown -R ftp. /home/vsftpd
 
-echo -e "${FTP_USER}\n${FTP_PASS}" > /etc/vsftpd/virtual_users.txt
-/usr/bin/db_load -T -t hash -f /etc/vsftpd/virtual_users.txt /etc/vsftpd/virtual_users.db
+echo -e "${FTP_USER}\n${FTP_PASS}" > /home/vsftpd/virtual_users.txt
+/usr/bin/db_load -T -t hash -f /home/vsftpd/virtual_users.txt /home/vsftpd/virtual_users.db
 
 # Create a banner file
 echo "vsftpd `vsftpd -v` running on `uname -n`" >/home/vsftpd/banner
