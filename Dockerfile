@@ -7,7 +7,9 @@ LABEL Description="RHEL 7 based vsftpd server. Supports passive mode and virtual
 #RUN yum -y update && \
 #    yum clean all && \
 #    yum -y install httpd && \
-RUN yum install -y  vsftpd db4-utils db4
+RUN yum -y install --disablerepo "*" --enablerepo rhel-7-server-rpms \
+      vsftpd db4-utils db4 && \
+      yum clean all
 
 ENV FTP_USER **String** \
     FTP_PASS **Random** \
@@ -21,12 +23,14 @@ COPY vsftpd_virtual /etc/pam.d/
 COPY run-vsftpd.sh /usr/sbin/
 
 RUN chmod +x /usr/sbin/run-vsftpd.sh && \
-    mkdir -p /home/vsftpd/ 
-#   chown -R ftp:ftp /home/vsftpd/
+    mkdir -p /home/vsftpd/ && \
+    chown -R ftp:ftp /home/vsftpd/
 
 VOLUME /home/vsftpd
 VOLUME /var/log/vsftpd
 
-EXPOSE 20 21
+EXPOSE 2020 2021
+
+USER 14 # ftp
 
 CMD ["/usr/sbin/run-vsftpd.sh"]
