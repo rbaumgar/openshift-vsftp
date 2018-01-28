@@ -41,7 +41,7 @@ echo "pasv_min_port=${PASV_MIN_PORT}" >> /etc/vsftpd/vsftpd.conf
 # Get log file path
 export LOG_FILE=`grep xferlog_file /etc/vsftpd/vsftpd.conf|cut -d= -f2`
 
-/usr/bin/ln -sf /dev/stdout $LOG_FILE
+# /usr/bin/ln -sf /dev/stdout $LOG_FILE
 
 echo	SERVER SETTINGS
 echo	---------------
