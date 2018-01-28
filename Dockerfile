@@ -1,11 +1,12 @@
-# FROM registry.access.redhat.com/rhel7
-FROM docker.io/centos:centos7
+FROM registry.access.redhat.com/rhel7
+# FROM docker.io/centos:centos7
+
 MAINTAINER Robert Baumgartner <rbaumgar@redhat.com>
 
 LABEL Description="RHEL 7 based vsftpd server. Supports passive mode and virtual users."
 
-#RUN yum -y install --disablerepo "*" --enablerepo rhel-7-server-rpms \
-RUN yum -y install \
+# RUN yum -y install \
+RUN yum -y install --disablerepo "*" --enablerepo rhel-7-server-rpms \
            vsftpd db4-utils db4 && \
     yum clean all
 
