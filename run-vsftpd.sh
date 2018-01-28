@@ -59,6 +59,9 @@ echo
 echo run vsftp with /etc/vsftp/vsftpd.conf
 date
 
+touch $LOG_FILE
+tail -f $LOG_FILE &
+
 /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf 
 
 date
