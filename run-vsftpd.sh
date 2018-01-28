@@ -28,7 +28,7 @@ echo -e "${FTP_USER}\n${FTP_PASS}" > /home/vsftpd/virtual_users.txt
 /usr/bin/db_load -T -t hash -f /home/vsftpd/virtual_users.txt /home/vsftpd/virtual_users.db
 
 # Create a banner file
-echo "vsftpd `vsftpd -v` running on `uname -n`" >/home/vsftpd/banner
+echo "vsftpd running on `uname -n`" >/home/vsftpd/banner
 
 # Set passive mode parameters:
 if [ "$PASV_ADDRESS" = "**IPv4**" ]; then
@@ -48,7 +48,6 @@ echo	---------------
 echo	· FTP User: $FTP_USER
 echo	· FTP Password: $FTP_PASS
 echo	· Log file: $LOG_FILE
-echo	· Redirect vsftpd log to STDOUT: No.
 echo 
 
 # Run vsftpd:
